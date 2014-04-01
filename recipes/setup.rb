@@ -30,6 +30,7 @@ node[:deploy].each do |application, deploy|
   if node[:sidekiq][application]
 
     workers = node[:sidekiq][application].to_hash.reject {|k,v| k.to_s =~ /restart_command|syslog/ }
+    monit_config_directory = node[:sidekiq][application][:config_directory] || '/etc/monit/conf.d/'
     config_directory = "#{deploy[:deploy_to]}/shared/config"
 
     workers.each do |worker, options|
@@ -61,7 +62,7 @@ node[:deploy].each do |application, deploy|
       end
     end
 
-    template "/etc/monit/conf.d/sidekiq_#{application}.monitrc" do
+    template "#{monit_config_directory}/sidekiq_#{application}.monitrc" do
       mode 0644
       source "sidekiq_monitrc.erb"
       variables({
