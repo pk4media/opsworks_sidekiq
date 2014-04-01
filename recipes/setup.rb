@@ -30,7 +30,7 @@ node[:deploy].each do |application, deploy|
   if node[:sidekiq][application]
 
     workers = node[:sidekiq][application].to_hash.reject {|k,v| k.to_s =~ /restart_command|syslog/ }
-    monit_config_directory = node[:sidekiq][application][:config_directory] || '/etc/monit/conf.d/'
+    monit_config_directory = node[:sidekiq][application][:config_directory] || '/etc/monit/conf.d'
     config_directory = "#{deploy[:deploy_to]}/shared/config"
 
     workers.each do |worker, options|
